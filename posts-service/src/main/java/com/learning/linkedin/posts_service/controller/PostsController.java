@@ -1,5 +1,7 @@
 package com.learning.linkedin.posts_service.controller;
 
+import com.learning.linkedin.posts_service.auth.UserContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+@Slf4j
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/core")
 @RequiredArgsConstructor
 public class PostsController {
 
@@ -34,7 +37,9 @@ public class PostsController {
     }
 
     @GetMapping("/{postId}")
-    private ResponseEntity<PostDto> getPost(@PathVariable Long postId){
+    private ResponseEntity<PostDto> getPost(@PathVariable Long postId,HttpServletRequest httpServletRequest){
+       Long userId = UserContextHolder.getCurrentUserId();
+        log.info("UserId is : {}",userId);
         PostDto post = postsService.getPostById(postId);
 
         return ResponseEntity.ok(post);

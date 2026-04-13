@@ -3,6 +3,9 @@ package com.learning.linkedin.posts_service.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.learning.linkedin.posts_service.auth.UserContextHolder;
+import com.learning.linkedin.posts_service.clients.ConnectionsClient;
+import com.learning.linkedin.posts_service.dto.PersonDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ public class PostsService {
     
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
+    private final ConnectionsClient connectionsClient;
 
     public PostDto createPost(PostCreateRequestDto postDto,Long userId) {
 
@@ -37,6 +41,14 @@ public class PostsService {
     public PostDto getPostById(Long postId) {
 
         log.debug("Retrieving post with id:{}",postId);
+        Long userId = UserContextHolder.getCurrentUserId();
+
+        List<PersonDto> firstConnection = connectionsClient.getFirstConnections();
+
+        log.info("First Degree Connection are: {}",firstConnection);
+
+        //Todo send Notification to all the connections
+
       Post postDto= postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post not found with id: "+postId));
       return modelMapper.map(postDto,PostDto.class);
     }

@@ -32,7 +32,7 @@ public class AuthController {
         return new ResponseEntity<>(userDto,HttpStatus.CREATED);
     }
 
-     @PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto) throws BadRequestException {
         String token = authService.login(loginRequestDto);
         
